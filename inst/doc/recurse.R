@@ -1,7 +1,7 @@
 ## ---- results='hide', message=FALSE, warning=FALSE-----------------------
 require(recurse)
 require(scales)
-
+require(sp)
 
 ## ---- fig.width=6, fig.height=6------------------------------------------
 data(martin)
@@ -71,6 +71,17 @@ with(animals[popvisit$revisits > visitThreshold,],
 	points(x, y, col = c(alpha("red", 0.5), alpha("darkblue", 0.5))[as.numeric(id)], 
 		   pch = c(15:17)[popCluster$cluster]) )
 legend("topleft", pch = 15:17, legend = paste("cluster", 1:3), bty = "n")
+
+## ---- echo=FALSE, fig.width=5, fig.height=5------------------------------
+protectedArea = sp::SpatialPolygons( list(
+		   	    	 	sp::Polygons( list(sp::Polygon(cbind(c(4,10,9,3.5,4),c(11,9,13,13.5,11)))), ID = 1 )
+		    	 	 	))
+plot(martin$x, martin$y, type = "l", pch = 20, 
+	 xlab = "x", ylab = "y", asp = 1)
+plot(protectedArea, add = TRUE, border = "red", lwd = 2)
+
+## ------------------------------------------------------------------------
+getRecursionsInPolygon(martin, protectedArea)
 
 ## ------------------------------------------------------------------------
 breaks = martin$t[c(1, nrow(martin)/2, nrow(martin))]
